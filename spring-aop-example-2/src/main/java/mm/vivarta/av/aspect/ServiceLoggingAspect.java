@@ -19,6 +19,7 @@ import java.util.List;
 @Aspect
 @Component
 public class ServiceLoggingAspect {
+  // order of advice aspects matter
 
   public static final Logger log = LoggerFactory.getLogger(ServiceLoggingAspect.class.getName());
 
@@ -30,13 +31,17 @@ public class ServiceLoggingAspect {
     log.debug("Calling method: {}", joinPoint.getSignature().getName());
   }
 
-  @AfterThrowing(pointcut = "inServiceLayer()", throwing = "userException")
-  public void throwingUserException(JoinPoint joinPoint, UserException userException) {
-    log.debug(
-      "Calling method: {} throwing error {}",
-      joinPoint.getSignature().getName(),
-      userException.getMessage()
-    );
+  @Around(value = "inServiceLayer()")
+  public Object timeMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
+    long start = System.currentTimeMillis();
+    Object result = null;
+    try {
+      result = joinPoint.proceed(); // Proceed with the intercepted method
+    } finally {
+      long duration = System.currentTimeMillis() - start;
+      log.debug("Method {} executed in {} ms", joinPoint.getSignature().getName(), duration);
+    }
+    return result;
   }
 
   @AfterReturning(pointcut = "inServiceLayer()", returning = "userDto")
@@ -57,17 +62,12 @@ public class ServiceLoggingAspect {
     );
   }
 
-  @Around(value = "inServiceLayer()")
-  public Object timeMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
-    long start = System.currentTimeMillis();
-    Object result = null;
-    try {
-      result = joinPoint.proceed(); // Proceed with the intercepted method
-    } finally {
-      long duration = System.currentTimeMillis() - start;
-      log.debug("Method {} executed in {} ms", joinPoint.getSignature().getName(), duration);
-    }
-    return result;
+  @AfterThrowing(pointcut = "inServiceLayer()", throwing = "userException")
+  public void throwingUserException(JoinPoint joinPoint, UserException userException) {
+    log.debug(
+      "Calling method: {} throwing error {}",
+      joinPoint.getSignature().getName(),
+      userException.getMessage()
+    );
   }
-
 }
