@@ -55,6 +55,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-aop</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -68,6 +74,7 @@
 	<modules>
 		<module>spring-aop-example-1</module>
 		<module>spring-aop-example-2</module>
+		<module>spring-aop-example-3</module>
 	</modules>
 
 </project>
