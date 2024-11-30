@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring-aop-example-2
+logging:
+  level:
+    mm:
+      vivarta:
+        av: DEBUG
+#  org:
+#    springframework:
+#      aop: DEBUG
