@@ -66,6 +66,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Spring Boot Maven Plugin (if using Spring Boot) -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>mm.vivarta.av.SpringAOPExample2</mainClass> <!-- Specify your main class here -->
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
